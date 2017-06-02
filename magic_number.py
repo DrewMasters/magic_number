@@ -21,7 +21,7 @@ for line in s:
 		c=c+1
 	standings[team] = [w,l,gr]
 
-print standings
+s.close()
 
 for line in f:
 	c=0
@@ -48,4 +48,12 @@ for line in f:
 	standings[team1][2] = int(standings[team1][2]) - 1
 	standings[team2][2] = int(standings[team2][2]) - 1
 
-print standings
+f.close()
+
+f = open('standings', 'w')
+
+for key, value in standings.iteritems():
+	w = value[0]
+	l = value[1]
+	gr = value[2]
+	f.write(key + " " + str(w) + " " + str(l) + " " + str(gr) + "\n")
