@@ -1,16 +1,15 @@
 import pandas as pd
 
-file_location = r'./test_files/'
-c_standings = 'standings.csv'
-c_week = 'c_week.csv'
-Total_games = 8
+c_standings = 'standings'
+c_week = 'c_week'
+Total_games = 6
 cutoff = 2
 
-standings = pd.read_csv(file_location+c_standings,names=['Team','Wins','Losses','Games_Remaining','Magic_Number','Playoff_Magic_Number'])
+standings = pd.read_csv(c_standings,names=['Team','W','L','GR','MN','PMN'])
 
 standings['Team'] = standings['Team'].astype('str')
 
-scores = open(file_location+c_week,'r')
+scores = open(c_week,'r')
 for line in scores:
 	c=0
 	team1 = ""
@@ -28,18 +27,22 @@ for line in scores:
 			s2 = int(word)
 		c=c+1
 	if s1>s2:
-		standings.loc[standings['Team']==team1,'Wins'] += 1
-		standings.loc[standings['Team']==team2,'Losses'] += 1
+		standings.loc[standings['Team']==team1,'W'] += 1
+		standings.loc[standings['Team']==team2,'L'] += 1
 	elif s1<s2:
-		standings.loc[standings['Team']==team2,'Wins'] += 1
-		standings.loc[standings['Team']==team1,'Losses'] += 1
-	standings.loc[standings['Team']==team1,'Games_Remaining'] -= 1
-	standings.loc[standings['Team']==team2,'Games_Remaining'] -= 1
+		standings.loc[standings['Team']==team2,'W'] += 1
+		standings.loc[standings['Team']==team1,'L'] += 1
+	standings.loc[standings['Team']==team1,'GR'] -= 1
+	standings.loc[standings['Team']==team2,'GR'] -= 1
 
-Sort_standings = standings.sort_values(['Wins'],ascending=False)
+Sort_standings = standings.sort_values(['W'],ascending=False)
 
-top_team = Sort_standings.iloc[0].Wins
-playoff_cutoff = Sort_standings.iloc[cutoff].Wins
+top_team = Sort_standings.iloc[0].W
+playoff_cutoff = Sort_standings.iloc[cutoff].W
 
-Sort_standings.Magic_Number = Total_games + 1 - top_team - Sort_standings.Losses
-Sort_standings.Playoff_Magic_Number = Total_games + 1 - playoff_cutoff - Sort_standings.Losses
+Sort_standings.MN = Total_games + 1 - top_team - Sort_standings.L
+Sort_standings.PMN = Total_games + 1 - playoff_cutoff - Sort_standings.L
+
+Sort_standings.to_html('result.html',header=True,index=False)
+
+Sort_standings.to_csv('result.csv',header=False,index=False)
