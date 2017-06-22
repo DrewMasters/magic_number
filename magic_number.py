@@ -2,8 +2,8 @@ import pandas as pd
 
 c_standings = 'standings'
 c_week = 'c_week'
-Total_games = 6
-cutoff = 2
+Total_games = 21
+cutoff = 4
 
 standings = pd.read_csv(c_standings,names=['Team','W','L','GR','MN','PMN'])
 
@@ -20,11 +20,11 @@ for line in scores:
 		if c==0:
 			team1 = str(word)
 		elif c==1:
-			s1 = int(word)
+			s1 = float(word)
 		elif c==2:
 			team2 = str(word)
 		elif c==3:
-			s2 = int(word)
+			s2 = float(word)
 		c=c+1
 	if s1>s2:
 		standings.loc[standings['Team']==team1,'W'] += 1
